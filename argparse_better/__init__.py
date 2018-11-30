@@ -4,6 +4,11 @@
 module `argparse_better`;
 '''
 
+from argparse import ONE_OR_MORE
+from argparse import OPTIONAL
+from argparse import PARSER
+from argparse import REMAINDER
+from argparse import ZERO_OR_MORE
 from gettext import gettext as _
 import argparse
 
@@ -12,7 +17,7 @@ class HelpFormatter(argparse.HelpFormatter):
     '''
     formatter for generating usage messages and argument help strings;
 
-    difference from super class:
+    improvements over super class:
 
     -   default indent increment is 4 (io: 2);
 
@@ -22,7 +27,11 @@ class HelpFormatter(argparse.HelpFormatter):
 
     -   actions are sorted by long option strings;
 
-    -   omit options in usage and not wrap usage;
+    -   do not list options in usage;
+
+    -   do not wrap usage;
+
+    -   enclose metavars of mandatory arguments in braces;
     '''
 
     def __init__(self, prog, indent_increment=4, max_help_position=48,
@@ -37,8 +46,7 @@ class HelpFormatter(argparse.HelpFormatter):
     def _format_action_invocation(self, action):
         if not action.option_strings:
             default = self._get_default_metavar_for_positional(action)
-            metavar, = self._metavar_formatter(action, default)(1)
-            return metavar
+            return self._format_args(action, default)
         else:
             if action.nargs == 0:
                 return '{}{}'.format(
@@ -52,6 +60,25 @@ class HelpFormatter(argparse.HelpFormatter):
                     ' ' * 4 * int(action.option_strings[0].startswith('--')),
                     ', '.join(action.option_strings),
                 ) + ' ' + args_string
+
+    def _format_args(self, action, default_metavar):
+        get_metavar = self._metavar_formatter(action, default_metavar)
+        if action.nargs is None:
+            result = '{%s}' % get_metavar(1)
+        elif action.nargs == OPTIONAL:
+            result = '[%s]' % get_metavar(1)
+        elif action.nargs == ZERO_OR_MORE:
+            result = '[%s [%s ...]]' % get_metavar(2)
+        elif action.nargs == ONE_OR_MORE:
+            result = '%s [%s ...]' % get_metavar(2)
+        elif action.nargs == REMAINDER:
+            result = '...'
+        elif action.nargs == PARSER:
+            result = '%s ...' % get_metavar(1)
+        else:
+            formats = ['{%s}' for _ in range(action.nargs)]
+            result = ' '.join(formats) % get_metavar(action.nargs)
+        return result
 
     def _format_usage(self, usage, actions, groups, prefix):
         if prefix is None:
@@ -74,14 +101,16 @@ class HelpFormatter(argparse.HelpFormatter):
             positionals = []
             for action in actions:
                 if action.option_strings:
-                    pass
+                    optionals.append(action)
                 else:
                     positionals.append(action)
 
             # build full usage string
             format = self._format_actions_usage
-            action_usage = format(optionals + positionals, groups)
-            usage = ' '.join([s for s in [prog, action_usage] if s])
+            action_usage = format(positionals, groups)
+            usage = ' '.join([s for s in [
+                prog, '[options]' if optionals else '', action_usage
+            ] if s])
 
         # prefix with 'usage:'
         return '%s%s\n\n' % (prefix, usage)
