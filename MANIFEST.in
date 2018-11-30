@@ -1,0 +1,9 @@
+##  include md files;
+include *.md
+
+##  include license file;
+include LICENSE.txt
+
+##  include data files;
+recursive-include data *
+
