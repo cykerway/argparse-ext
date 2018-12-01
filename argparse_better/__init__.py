@@ -32,6 +32,8 @@ class HelpFormatter(argparse.HelpFormatter):
     -   do not wrap usage;
 
     -   enclose metavars of mandatory arguments in braces;
+
+    -   do not format choices metavar;
     '''
 
     def __init__(self, prog, indent_increment=4, max_help_position=48,
@@ -64,9 +66,9 @@ class HelpFormatter(argparse.HelpFormatter):
     def _metavar_formatter(self, action, default_metavar):
         if action.metavar is not None:
             result = action.metavar
-        elif action.choices is not None:
-            choice_strs = [str(choice) for choice in action.choices]
-            result = '%s' % ','.join(choice_strs)
+#        elif action.choices is not None:
+#            choice_strs = [str(choice) for choice in action.choices]
+#            result = '%s' % ','.join(choice_strs)
         else:
             result = default_metavar
 
