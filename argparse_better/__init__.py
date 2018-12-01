@@ -48,7 +48,8 @@ class HelpFormatter(argparse.HelpFormatter):
     def _format_action_invocation(self, action):
         if not action.option_strings:
             default = self._get_default_metavar_for_positional(action)
-            return self._format_args(action, default)
+            args_string = self._format_args(action, default)
+            return args_string
         else:
             if action.nargs == 0:
                 return '{}{}'.format(
