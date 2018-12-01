@@ -25,8 +25,6 @@ class HelpFormatter(argparse.HelpFormatter):
 
     -   short and long options are formatted together;
 
-    -   actions are sorted by long option strings;
-
     -   do not list options in usage;
 
     -   do not wrap usage;
@@ -49,7 +47,9 @@ class HelpFormatter(argparse.HelpFormatter):
         if not action.option_strings:
             default = self._get_default_metavar_for_positional(action)
             args_string = self._format_args(action, default)
-            return args_string
+            if args_string:
+                return args_string
+            return ', '.join(self._metavar_formatter(action, default)(1))
         else:
             if action.nargs == 0:
                 return '{}{}'.format(
@@ -134,7 +134,7 @@ class HelpFormatter(argparse.HelpFormatter):
         # prefix with 'usage:'
         return '%s%s\n\n' % (prefix, usage)
 
-    def add_arguments(self, actions):
-        actions = sorted(actions, key=lambda x: x.option_strings[::-1])
-        super().add_arguments(actions)
+#    def add_arguments(self, actions):
+#        actions = sorted(actions, key=lambda x: x.option_strings[::-1])
+#        super().add_arguments(actions)
 
