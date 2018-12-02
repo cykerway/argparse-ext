@@ -4,7 +4,7 @@ argparse ext;
 
 ## install
 
-pip install argparse-ext
+    pip install argparse-ext
 
 ## license
 
