@@ -37,7 +37,7 @@ setup(
     ##
     ##  <https://packaging.python.org/specifications/core-metadata/#name>
     ##
-    name='argparse-better',
+    name='argparse-ext',
 
     ##  project version;
     ##
@@ -57,7 +57,7 @@ setup(
     ##
     ##  <https://packaging.python.org/specifications/core-metadata/#home-page-optional>
     ##
-    url='https://github.com/cykerway/argparse-better',
+    url='https://github.com/cykerway/argparse-ext',
 
     ##  author name;
     author='Cyker Way',
@@ -81,7 +81,7 @@ setup(
     ##
     ##  <https://packaging.python.org/specifications/core-metadata/#summary>
     ##
-    description='argparse better;',
+    description='argparse ext;',
 
     ##  a longer description shown on project homepage on pypi;
     ##
@@ -140,7 +140,7 @@ setup(
     ##
     ##  these keywords will appear on the project page;
     ##
-    keywords='argparse better',
+    keywords='argparse ext',
 
     ##  package data;
     ##
@@ -220,10 +220,10 @@ setup(
     ##  <https://packaging.python.org/specifications/core-metadata/#project-url-multiple-use>
     ##
     project_urls={
-        'Bug Reports': 'https://github.com/cykerway/argparse-better/issues',
+        'Bug Reports': 'https://github.com/cykerway/argparse-ext/issues',
 #        'Funding': 'https://donate.pypi.org',
 #        'Say Thanks!': 'http://saythanks.io/to/example',
-        'Source': 'https://github.com/cykerway/argparse-better/',
+        'Source': 'https://github.com/cykerway/argparse-ext/',
     },
 )
 

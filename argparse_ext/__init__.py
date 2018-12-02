@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 '''
-module `argparse_better`;
+argparse ext;
 '''
 
 from argparse import ONE_OR_MORE

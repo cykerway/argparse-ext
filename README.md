@@ -1,12 +1,10 @@
-# argparse-better
+# argparse-ext
 
-argparse better;
+argparse ext;
 
 ## install
 
-install with pip:
-
-    pip install argparse-better
+pip install argparse-ext
 
 ## license
 
