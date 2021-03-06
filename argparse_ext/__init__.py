@@ -33,7 +33,7 @@ class HelpFormatter(argparse.HelpFormatter):
 
     -   do not format choices metavar;
 
-    -   do not capitalize default positional metavar;
+    -   do not capitalize default optional metavar;
     '''
 
     def __init__(self, prog, indent_increment=4, max_help_position=48,
