@@ -32,6 +32,8 @@ class HelpFormatter(argparse.HelpFormatter):
     -   enclose metavars of mandatory arguments in braces;
 
     -   do not format choices metavar;
+
+    -   do not capitalize default positional metavar;
     '''
 
     def __init__(self, prog, indent_increment=4, max_help_position=48,
@@ -133,6 +135,9 @@ class HelpFormatter(argparse.HelpFormatter):
 
         # prefix with 'usage:'
         return '%s%s\n\n' % (prefix, usage)
+
+    def _get_default_metavar_for_optional(self, action):
+        return action.dest
 
 #    def add_arguments(self, actions):
 #        actions = sorted(actions, key=lambda x: x.option_strings[::-1])
