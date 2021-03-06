@@ -49,7 +49,7 @@ setup(
     ##
     ##  <https://packaging.python.org/en/latest/single_source_version.html>
     ##
-    version='1.3.0',
+    version='1.4.0',
 
     ##  project homepage;
     ##
