@@ -1,6 +1,6 @@
 # argparse-ext
 
-argparse ext;
+argparse extension;
 
 ## install
 
@@ -8,7 +8,7 @@ argparse ext;
 
 ## license
 
-Copyright (c) 2018 Cyker Way
+Copyright (C) 2018-2021 Cyker Way
 
 This program is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
