@@ -143,3 +143,12 @@ class HelpFormatter(argparse.HelpFormatter):
 #        actions = sorted(actions, key=lambda x: x.option_strings[::-1])
 #        super().add_arguments(actions)
 
+class RawDescriptionHelpFormatter(HelpFormatter):
+
+    '''
+    retain any formatting in descriptions;
+    '''
+
+    def _fill_text(self, text, width, indent):
+        return ''.join(indent + line for line in text.splitlines(keepends=True))
+
