@@ -17,7 +17,7 @@ long_description = (here / 'README.md').read_text(encoding='utf-8')
 
 setup(
     name='argparse-ext',
-    version='1.4.0',
+    version='1.4.1',
     packages=find_packages(),
 
     url='https://github.com/cykerway/argparse-ext',
