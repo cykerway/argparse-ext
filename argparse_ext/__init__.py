@@ -9,6 +9,7 @@ from argparse import OPTIONAL
 from argparse import PARSER
 from argparse import REMAINDER
 from argparse import ZERO_OR_MORE
+from argparse import _SubParsersAction
 from gettext import gettext as _
 import argparse
 
@@ -19,31 +20,44 @@ class HelpFormatter(argparse.HelpFormatter):
 
     improvements over super class:
 
-    -   default indent increment is 4 (io: 2);
-
-    -   default max help position is 48 (io: 24);
-
+    -   default indent increment is 4 (from: 2);
+    -   default max help position is 48 (from: 24);
     -   short and long options are formatted together;
-
     -   do not list options in usage;
-
     -   do not wrap usage;
-
     -   enclose metavars of mandatory arguments in braces;
-
     -   do not format choices metavar;
-
     -   do not capitalize default optional metavar;
+    -   supress subparser action header;
+    -   sort actions;
     '''
 
     def __init__(self, prog, indent_increment=4, max_help_position=48,
-                 width=None):
+                 width=None,
+                 merge_choices_metavar=False,
+                 sort_actions=False,
+                ):
+        self._merge_choices_metavar = merge_choices_metavar
+        self._sort_actions = sort_actions
         return super().__init__(
             prog=prog,
             indent_increment=indent_increment,
             max_help_position=max_help_position,
             width=width,
         )
+
+    def _format_action(self, action):
+        if not isinstance(action, _SubParsersAction):
+            return super()._format_action(action)
+
+        parts = []
+
+        # if there are any sub-actions, add their help as well
+        for subaction in self._iter_indented_subactions(action):
+            parts.append(self._format_action(subaction))
+
+        # return a single string
+        return self._join_parts(parts)
 
     def _format_action_invocation(self, action):
         if not action.option_strings:
@@ -69,9 +83,9 @@ class HelpFormatter(argparse.HelpFormatter):
     def _metavar_formatter(self, action, default_metavar):
         if action.metavar is not None:
             result = action.metavar
-#        elif action.choices is not None:
-#            choice_strs = [str(choice) for choice in action.choices]
-#            result = '%s' % ','.join(choice_strs)
+        elif action.choices is not None and not self._merge_choices_metavar:
+            choice_strs = [str(choice) for choice in action.choices]
+            result = '%s' % ','.join(choice_strs)
         else:
             result = default_metavar
 
@@ -139,9 +153,10 @@ class HelpFormatter(argparse.HelpFormatter):
     def _get_default_metavar_for_optional(self, action):
         return action.dest
 
-#    def add_arguments(self, actions):
-#        actions = sorted(actions, key=lambda x: x.option_strings[::-1])
-#        super().add_arguments(actions)
+    def add_arguments(self, actions):
+        if self._sort_actions:
+            actions = sorted(actions, key=lambda x: x.option_strings[::-1])
+        return super().add_arguments(actions)
 
 class RawDescriptionHelpFormatter(HelpFormatter):
 
