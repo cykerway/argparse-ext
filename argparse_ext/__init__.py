@@ -46,6 +46,41 @@ class HelpFormatter(argparse.HelpFormatter):
             width=width,
         )
 
+    def _format_usage(self, usage, actions, groups, prefix):
+        if prefix is None:
+            prefix = _('usage: ')
+
+        # if usage is specified, use that
+        if usage is not None:
+            usage = usage % dict(prog=self._prog)
+
+        # if no optionals or positionals are available, usage is just prog
+        elif usage is None and not actions:
+            usage = '%(prog)s' % dict(prog=self._prog)
+
+        # if optionals and positionals are available, calculate usage
+        elif usage is None:
+            prog = '%(prog)s' % dict(prog=self._prog)
+
+            # split optionals from positionals
+            optionals = []
+            positionals = []
+            for action in actions:
+                if action.option_strings:
+                    optionals.append(action)
+                else:
+                    positionals.append(action)
+
+            # build full usage string
+            format = self._format_actions_usage
+            action_usage = format(positionals, groups)
+            usage = ' '.join([s for s in [
+                prog, '[options]' if optionals else '', action_usage
+            ] if s])
+
+        # prefix with 'usage:'
+        return '%s%s\n\n' % (prefix, usage)
+
     def _format_action(self, action):
         if not isinstance(action, _SubParsersAction):
             return super()._format_action(action)
@@ -114,41 +149,6 @@ class HelpFormatter(argparse.HelpFormatter):
             formats = ['{%s}' for _ in range(action.nargs)]
             result = ' '.join(formats) % get_metavar(action.nargs)
         return result
-
-    def _format_usage(self, usage, actions, groups, prefix):
-        if prefix is None:
-            prefix = _('usage: ')
-
-        # if usage is specified, use that
-        if usage is not None:
-            usage = usage % dict(prog=self._prog)
-
-        # if no optionals or positionals are available, usage is just prog
-        elif usage is None and not actions:
-            usage = '%(prog)s' % dict(prog=self._prog)
-
-        # if optionals and positionals are available, calculate usage
-        elif usage is None:
-            prog = '%(prog)s' % dict(prog=self._prog)
-
-            # split optionals from positionals
-            optionals = []
-            positionals = []
-            for action in actions:
-                if action.option_strings:
-                    optionals.append(action)
-                else:
-                    positionals.append(action)
-
-            # build full usage string
-            format = self._format_actions_usage
-            action_usage = format(positionals, groups)
-            usage = ' '.join([s for s in [
-                prog, '[options]' if optionals else '', action_usage
-            ] if s])
-
-        # prefix with 'usage:'
-        return '%s%s\n\n' % (prefix, usage)
 
     def _get_default_metavar_for_optional(self, action):
         return action.dest
